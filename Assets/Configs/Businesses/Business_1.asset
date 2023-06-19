@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb5012e081ac337409870501bafc10e9, type: 3}
-  m_Name: Business_2
+  m_Name: Business_1
   m_EditorClassIdentifier: 
-  businessName: "\u0411\u0438\u0437\u043D\u0435\u0441 2"
-  profitDelay: 6
-  basePrice: 40
-  baseProfit: 40
-  upgrades:
+  _businessName: Business 1
+  _profitDelay: 3
+  _basePrice: 3
+  _baseProfit: 3
+  _upgrades:
   - name: Upgrade 1
-    upgradePrice: 1200
-    profitMultiplier: 1
+    upgradePrice: 50
+    profitMultiplier: 0.5
   - name: Upgrade 2
-    upgradePrice: 4000
-    profitMultiplier: 2
-  activeOnStart: 0
+    upgradePrice: 400
+    profitMultiplier: 1
+  _activeOnStart: 1
