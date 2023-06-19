@@ -11,7 +11,7 @@ namespace TestAsssignment.Systems
 
         private EcsPool<ActiveBusinessComponent> _activePool;
         private EcsPool<BusinessConfigComponent> _configsPool;
-        private EcsPool<AddMoney> _profitPool;
+        private EcsPool<AddMoneyComponent> _profitPool;
 
         public void Init(IEcsSystems systems)
         {
@@ -20,7 +20,7 @@ namespace TestAsssignment.Systems
 
             _activePool = world.GetPool<ActiveBusinessComponent>();
             _configsPool = world.GetPool<BusinessConfigComponent>();
-            _profitPool = world.GetPool<AddMoney>();
+            _profitPool = world.GetPool<AddMoneyComponent>();
         }
 
         public void Run(IEcsSystems systems)

@@ -7,13 +7,13 @@ namespace TestAsssignment.Configs
     public class BusinessConfig : ScriptableObject
     {
         [SerializeField]
-        private string businessName;
+        private string _businessName;
         [SerializeField]
-        private int profitDelay;
+        private int _profitDelay;
         [SerializeField]
-        private double basePrice;
+        private double _basePrice;
         [SerializeField]
-        private double baseProfit;
+        private double _baseProfit;
 
         [Serializable]
         public struct BusinessUpgrade
@@ -24,21 +24,20 @@ namespace TestAsssignment.Configs
         }
 
         [SerializeField]
-        private BusinessUpgrade[] upgrades = new BusinessUpgrade[upgradesCount];
+        private BusinessUpgrade[] _upgrades = new BusinessUpgrade[upgradesCount];
 
         [SerializeField]
-        private bool activeOnStart;
+        private bool _activeOnStart;
 
-        public string BusinesName => businessName;
-        public int ProfitDelay => profitDelay;
-        public double BasePrice => basePrice;
-        public double BaseProfit => baseProfit;
+        public string BusinesName => _businessName;
+        public int ProfitDelay => _profitDelay;
+        public double BasePrice => _basePrice;
+        public double BaseProfit => _baseProfit;
 
-        public BusinessUpgrade[] Upgrades => upgrades;
+        public BusinessUpgrade[] Upgrades => _upgrades;
 
-        public bool ActiveOnStart => activeOnStart;
+        public bool ActiveOnStart => _activeOnStart;
 
         public const int upgradesCount = 2;
-
     }
 }

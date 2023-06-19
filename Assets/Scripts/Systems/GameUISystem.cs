@@ -50,9 +50,9 @@ namespace TestAsssignment.Systems
             _buisnessesCongfigsPool = _world.GetPool<BusinessConfigComponent>();
             _activeBuisnessesPool = _world.GetPool<ActiveBusinessComponent>();
 
-            var businessDatas = GetBusnissesData(systems);
-
             _screenInstance = GameObject.Instantiate(_gameScreenPrefab);
+
+            var businessDatas = GetBusnissesData();
             _screenInstance.SetInfo(businessDatas);
 
             _sharedData = systems.GetShared<SharedData>();
@@ -60,15 +60,19 @@ namespace TestAsssignment.Systems
             _screenInstance.SetBalanceValue(_sharedData.Money);
         }
 
-        private List<BusinessData> GetBusnissesData(IEcsSystems systems)
+        private List<BusinessData> GetBusnissesData()
         {
             var businessDatas = new List<BusinessData>();
 
             foreach (var entity in _businessesFilter)
             {
-                var data = new BusinessData();
-                data.config = _buisnessesCongfigsPool.Get(entity).config;
-                data.entity = entity;
+                var data = new BusinessData
+                {
+                    config = _buisnessesCongfigsPool.Get(entity).config,
+                    entity = entity,
+                    onLvlUpPressed = OnLvlUpPressed,
+                    onPurchaseUpgradePressed = OnPurchaseUpgradePressed,
+                };
 
                 if (_activeBuisnessesPool.Has(entity))
                 {
@@ -84,9 +88,6 @@ namespace TestAsssignment.Systems
                     data.purchasedUpgrades = new bool[BusinessConfig.upgradesCount];
                     data.profitProgress = 0;
                 }
-
-                data.onLvlUpPressed = OnLvlUpPressed;
-                data.onPurchaseUpgradePressed = OnPurchaseUpgradePressed;
 
                 businessDatas.Add(data);
             }

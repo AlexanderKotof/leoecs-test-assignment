@@ -4,17 +4,17 @@ using static TestAsssignment.Startup;
 
 namespace TestAsssignment.Systems
 {
-    public class SpendMoneySystem : IEcsPostRunSystem, IEcsInitSystem
+    public class AddMoneySystem : IEcsPostRunSystem, IEcsInitSystem
     {
         private EcsFilter _filter;
-        private EcsPool<SpendMoney> _spendMoneyPool;
+        private EcsPool<AddMoneyComponent> _addMoneyPool;
 
         public void Init(IEcsSystems systems)
         {
             var world = systems.GetWorld();
 
-            _filter = world.Filter<SpendMoney>().End();
-            _spendMoneyPool = world.GetPool<SpendMoney>();
+            _filter = world.Filter<AddMoneyComponent>().End();
+            _addMoneyPool = world.GetPool<AddMoneyComponent>();
         }
 
         public void PostRun(IEcsSystems systems)
@@ -23,9 +23,9 @@ namespace TestAsssignment.Systems
 
             foreach (var entity in _filter)
             {
-                ref var spend = ref _spendMoneyPool.Get(entity);
-                sharedData.SpendMoney(spend.value);
-                _spendMoneyPool.Del(entity);
+                ref var addMoney = ref _addMoneyPool.Get(entity);
+                sharedData.AddMoney(addMoney.value);
+                _addMoneyPool.Del(entity);
             }
         }
     }

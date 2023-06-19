@@ -1248,7 +1248,7 @@ GameObject:
   - component: {fileID: 4804784023017560412}
   - component: {fileID: 4804784023017560411}
   m_Layer: 5
-  m_Name: BusinessItem
+  m_Name: BusinessListItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
