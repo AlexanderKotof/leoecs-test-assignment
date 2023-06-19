@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb5012e081ac337409870501bafc10e9, type: 3}
   m_Name: Business_2
   m_EditorClassIdentifier: 
-  businessName: "\u0411\u0438\u0437\u043D\u0435\u0441 1"
+  businessName: "\u0411\u0438\u0437\u043D\u0435\u0441 2"
   profitDelay: 6
-  baseCost: 40
+  basePrice: 40
   baseProfit: 40
-  improvements:
-  - improvementCost: 1200
+  upgrades:
+  - name: Upgrade 1
+    upgradePrice: 1200
     profitMultiplier: 1
-  - improvementCost: 4000
+  - name: Upgrade 2
+    upgradePrice: 4000
     profitMultiplier: 2
   activeOnStart: 0

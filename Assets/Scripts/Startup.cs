@@ -2,6 +2,7 @@ using Leopotam.EcsLite;
 using System;
 using TestAsssignment.Configs;
 using TestAsssignment.Systems;
+using TestAsssignment.UI;
 using UnityEngine;
 
 namespace TestAsssignment
@@ -40,6 +41,8 @@ namespace TestAsssignment
         }
         private SharedData _sharedData;
 
+        public GameScreenComponent gameScreenPrefab;
+
         private EcsWorld _world;
         private IEcsSystems _systems;
 
@@ -54,6 +57,7 @@ namespace TestAsssignment
                 .Add(new BusinessProfitSystem())
                 .Add(new AddMoneySystem())
                 .Add(new SpendMoneySystem())
+                .Add(new GameUISystem(gameScreenPrefab))
 #if UNITY_EDITOR
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem())
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsSystemsDebugSystem())

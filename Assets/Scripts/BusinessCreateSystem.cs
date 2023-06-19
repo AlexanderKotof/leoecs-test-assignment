@@ -32,7 +32,7 @@ namespace TestAsssignment.Systems
                     ref var activeBusiness = ref activeBusinessPool.Add(entity);
 
                     activeBusiness.businessLevel = _startBusinessLevel;
-                    activeBusiness.boughtImprovements = new int[0];
+                    activeBusiness.purchasedUpgrades = new bool[BusinessConfig.upgradesCount];
                     activeBusiness.profitProgress = 0;
                 }
             }

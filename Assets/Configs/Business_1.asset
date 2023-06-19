@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   businessName: "\u0411\u0438\u0437\u043D\u0435\u0441 1"
   profitDelay: 3
-  baseCost: 3
+  basePrice: 3
   baseProfit: 3
-  improvements:
-  - improvementCost: 50
+  upgrades:
+  - name: Upgrade 1
+    upgradePrice: 50
     profitMultiplier: 0.5
-  - improvementCost: 400
+  - name: Upgrade 2
+    upgradePrice: 400
     profitMultiplier: 1
   activeOnStart: 1

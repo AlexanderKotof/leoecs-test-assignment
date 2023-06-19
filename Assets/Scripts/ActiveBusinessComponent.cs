@@ -13,7 +13,7 @@ namespace TestAsssignment.Components
 
         public float profitProgress;
 
-        public int[] boughtImprovements;
+        public bool[] purchasedUpgrades;
     }
 
     public interface IChangeMoney
@@ -36,7 +36,7 @@ namespace TestAsssignment.Components
         public int entity;
     }
 
-    public struct BuyBusinessImprovement
+    public struct BuyBusinessUpgrade
     {
         public int entity;
         public int index;

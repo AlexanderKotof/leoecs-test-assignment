@@ -11,31 +11,34 @@ namespace TestAsssignment.Configs
         [SerializeField]
         private int profitDelay;
         [SerializeField]
-        private double baseCost;
+        private double basePrice;
         [SerializeField]
         private double baseProfit;
 
         [Serializable]
-        public struct BusinessImprovement
+        public struct BusinessUpgrade
         {
-            public double improvementCost;
+            public string name;
+            public double upgradePrice;
             public double profitMultiplier;
         }
 
         [SerializeField]
-        private BusinessImprovement[] improvements;
+        private BusinessUpgrade[] upgrades = new BusinessUpgrade[upgradesCount];
 
         [SerializeField]
         private bool activeOnStart;
 
         public string BusinesName => businessName;
         public int ProfitDelay => profitDelay;
-        public double BaseCost => baseCost;
+        public double BasePrice => basePrice;
         public double BaseProfit => baseProfit;
 
-        public BusinessImprovement[] Improvements => improvements;
+        public BusinessUpgrade[] Upgrades => upgrades;
 
         public bool ActiveOnStart => activeOnStart;
+
+        public const int upgradesCount = 2;
 
     }
 }

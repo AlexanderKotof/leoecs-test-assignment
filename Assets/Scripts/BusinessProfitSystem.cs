@@ -1,5 +1,6 @@
 ﻿using Leopotam.EcsLite;
 using TestAsssignment.Components;
+using TestAsssignment.Utils;
 using UnityEngine;
 
 namespace TestAsssignment.Systems
@@ -27,7 +28,7 @@ namespace TestAsssignment.Systems
             foreach (var entity in _filter)
             {
                 ref var activeComponent = ref _activePool.Get(entity);
-                ref var configComponent = ref _configsPool.Get(entity);
+                var configComponent = _configsPool.Get(entity);
 
                 activeComponent.profitProgress += Time.deltaTime;
 
@@ -36,21 +37,8 @@ namespace TestAsssignment.Systems
 
                 activeComponent.profitProgress = 0;
                 ref var profit = ref _profitPool.Add(systems.GetWorld().NewEntity());
-                profit.value = CalculateBusinessProfit(activeComponent, configComponent);
+                profit.value = GameMath.CalculateBusinessProfit(configComponent.config, activeComponent.businessLevel, activeComponent.purchasedUpgrades);
             }
-        }
-
-        private double CalculateBusinessProfit(ActiveBusinessComponent activeBusiness, BusinessConfigComponent configComponent)
-        {
-            double value = configComponent.config.BaseProfit * activeBusiness.businessLevel;
-            double multiplier = 1;
-
-            foreach (var improvement in activeBusiness.boughtImprovements)
-            {
-                multiplier += configComponent.config.Improvements[improvement].profitMultiplier;
-            }
-
-            return value * multiplier;
         }
     }
 }
