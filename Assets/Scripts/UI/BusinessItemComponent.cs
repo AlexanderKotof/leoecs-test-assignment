@@ -28,8 +28,8 @@ namespace TestAsssignment.UI
             businessNameText.SetText(data.config.BusinesName);
             lvlValueText.SetText(data.lvlValue.ToString());
 
-            profitValueText.SetText($"${GameMath.CalculateBusinessProfit(data.config, data.lvlValue, data.purchasedUpgrades)}");
-            lvlUpPriceValueText.SetText($"${GameMath.GetBusinessLvlUpPrice(data.config, data.lvlValue)}");
+            profitValueText.SetText($"${GameMathUtils.CalculateBusinessProfit(data.config, data.lvlValue, data.purchasedUpgrades)}");
+            lvlUpPriceValueText.SetText($"${GameMathUtils.GetBusinessLvlUpPrice(data.config, data.lvlValue)}");
 
             profitPogressbar.value = data.profitProgress / Data.config.ProfitDelay;
 

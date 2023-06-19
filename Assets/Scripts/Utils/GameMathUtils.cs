@@ -2,7 +2,7 @@
 
 namespace TestAsssignment.Utils
 {
-    public static class GameMath
+    public static class GameMathUtils
     {
         public static double CalculateBusinessProfit(BusinessConfig config, int businessLevel, bool[] purchasedUpgrades)
         {

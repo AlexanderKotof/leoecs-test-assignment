@@ -37,7 +37,7 @@ namespace TestAsssignment.Systems
 
                 activeComponent.profitProgress = 0;
                 ref var profit = ref _profitPool.Add(systems.GetWorld().NewEntity());
-                profit.value = GameMath.CalculateBusinessProfit(configComponent.config, activeComponent.businessLevel, activeComponent.purchasedUpgrades);
+                profit.value = GameMathUtils.CalculateBusinessProfit(configComponent.config, activeComponent.businessLevel, activeComponent.purchasedUpgrades);
             }
         }
     }

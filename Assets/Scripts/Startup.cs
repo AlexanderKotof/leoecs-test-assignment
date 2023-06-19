@@ -32,6 +32,11 @@ namespace TestAsssignment
                 Money -= value;
                 MoneyChanged?.Invoke(Money);
             }
+
+            public bool HasMoney(double value)
+            {
+                return Money >= value;
+            }
         }
         private SharedData _sharedData;
 
@@ -49,6 +54,8 @@ namespace TestAsssignment
                 .Add(new BusinessProfitSystem())
                 .Add(new AddMoneySystem())
                 .Add(new SpendMoneySystem())
+                .Add(new BusinessLvlUpSystem())
+                .Add(new BusinessUpgradePurchaseSystem())
                 .Add(new GameUISystem(gameSettings.GameScreenPrefab))
 #if UNITY_EDITOR
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem())

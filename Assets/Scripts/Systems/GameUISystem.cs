@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TestAsssignment.Components;
 using TestAsssignment.Configs;
 using TestAsssignment.UI;
+using TestAsssignment.Utils;
 using UnityEngine;
 using static TestAsssignment.Startup;
 
@@ -52,7 +53,7 @@ namespace TestAsssignment.Systems
 
             _screenInstance = GameObject.Instantiate(_gameScreenPrefab);
 
-            var businessDatas = GetBusnissesData();
+            var businessDatas = GetBusinessDatas();
             _screenInstance.SetInfo(businessDatas);
 
             _sharedData = systems.GetShared<SharedData>();
@@ -60,7 +61,8 @@ namespace TestAsssignment.Systems
             _screenInstance.SetBalanceValue(_sharedData.Money);
         }
 
-        private List<BusinessData> GetBusnissesData()
+        // rework
+        private List<BusinessData> GetBusinessDatas()
         {
             var businessDatas = new List<BusinessData>();
 
@@ -102,16 +104,44 @@ namespace TestAsssignment.Systems
 
         private void OnPurchaseUpgradePressed(BusinessData data, int upgradeIndex)
         {
-            Debug.Log("Purchase Upgrade click!");
+            if (data.lvlValue == 0)
+                return;
 
-            //TODO: check available balance and that level is more 0 and buy upgrade
+            var requiredMoney = data.config.Upgrades[upgradeIndex].upgradePrice;
+
+            if (!_sharedData.HasMoney(requiredMoney))
+                return;
+
+            var spendMoneyPool = _world.GetPool<SpendMoneyComponent>();
+            var upgradePool = _world.GetPool<BuyBusinessUpgradeCommponent>();
+
+            ref var spend = ref spendMoneyPool.Add(data.entity);
+            spend.value = requiredMoney;
+
+            ref var upgrade = ref upgradePool.Add(data.entity);
+            upgrade.entity = data.entity;
+            upgrade.index = upgradeIndex;
+
+            Debug.Log("Upgrade purchased!");
         }
 
         private void OnLvlUpPressed(BusinessData data)
         {
-            Debug.Log("Lvl Up click!");
+            var requiredMoney = GameMathUtils.GetBusinessLvlUpPrice(data.config, data.lvlValue);
 
-            //TODO: check available balance and that level is more 0 and buy upgrade
+            if (!_sharedData.HasMoney(requiredMoney))
+                return;
+
+            var spendMoneyPool = _world.GetPool<SpendMoneyComponent>();
+            var lvlupPool = _world.GetPool<IncreaseBusinessLevelComponent>();
+
+            ref var spend = ref spendMoneyPool.Add(data.entity);
+            spend.value = requiredMoney;
+
+            ref var upgrade = ref lvlupPool.Add(data.entity);
+            upgrade.entity = data.entity;
+
+            Debug.Log("Lvl up purchased!");
         }
 
         public void PostRun(IEcsSystems systems)
