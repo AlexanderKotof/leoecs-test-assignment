@@ -59,7 +59,7 @@ namespace TestAsssignment.Systems
 
             _sharedData = systems.GetShared<SharedData>();
             _sharedData.MoneyChanged += _screenInstance.SetBalanceValue;
-            _screenInstance.SetBalanceValue(_sharedData.Money);
+            _screenInstance.SetBalanceValue(_sharedData.Balance);
         }
 
         private List<BusinessData> GetBusinessDatas()

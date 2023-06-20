@@ -2,7 +2,9 @@ using Leopotam.EcsLite;
 using System;
 using TestAsssignment.Configs;
 using TestAsssignment.Systems;
+using TestAsssignment.Utils;
 using UnityEngine;
+using static TestAsssignment.Utils.SaveGameUtils;
 
 namespace TestAsssignment
 {
@@ -12,30 +14,40 @@ namespace TestAsssignment
 
         public class SharedData
         {
-            public double Money { get; private set; }
+            public double Balance { get; private set; }
+            public SaveData SavedData { get; private set; }
+
+            public bool HasSavedData => SavedData != null;
 
             public event Action<double> MoneyChanged;
 
             public SharedData(double startMoney)
             {
-                Money = startMoney;
+                Balance = startMoney;
+                SavedData = null;
+            }
+
+            public SharedData(SaveData savedData)
+            {
+                Balance = savedData.balance;
+                SavedData = savedData;
             }
 
             public void AddMoney(double value)
             {
-                Money += value;
-                MoneyChanged?.Invoke(Money);
+                Balance += value;
+                MoneyChanged?.Invoke(Balance);
             }
 
             public void SpendMoney(double value)
             {
-                Money -= value;
-                MoneyChanged?.Invoke(Money);
+                Balance -= value;
+                MoneyChanged?.Invoke(Balance);
             }
 
             public bool HasMoney(double value)
             {
-                return Money >= value;
+                return Balance >= value;
             }
         }
         private SharedData _sharedData;
@@ -45,7 +57,12 @@ namespace TestAsssignment
 
         private void Start()
         {
-            _sharedData = new SharedData(gameSettings.StartBalance);
+            if (SaveGameUtils.TryLoadGameData(out var data))
+            {
+                _sharedData = new SharedData(data);
+            }
+            else
+                _sharedData = new SharedData(gameSettings.StartBalance);
 
             _world = new EcsWorld();
             _systems = new EcsSystems(_world, _sharedData);
@@ -62,6 +79,13 @@ namespace TestAsssignment
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsSystemsDebugSystem())
 #endif
                 .Init();
+
+            Application.quitting += SaveData;
+        }
+
+        private void SaveData()
+        {
+            SaveGameUtils.SaveGameData(_world, _sharedData.Balance);
         }
 
         private void Update()
@@ -75,6 +99,8 @@ namespace TestAsssignment
             _systems = null;
             _world?.Destroy();
             _world = null;
+
+            Application.quitting -= SaveData;
         }
     }
 }
