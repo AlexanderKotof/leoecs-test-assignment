@@ -29,15 +29,16 @@ namespace TestAsssignment.Systems
 
             public BusinessConfig config;
 
-            public bool[] purchasedUpgrades;
-
-            public int lvlValue;
-
-            public float profitProgress;
+            public EcsPool<ActiveBusinessComponent> activeBuisnesses;
 
             public Action<BusinessData> onLvlUpPressed;
             public Action<BusinessData, int> onPurchaseUpgradePressed;
+
+            public bool IsActiveBusiness => activeBuisnesses.Has(entity);
+
+            public ActiveBusinessComponent GetActiveBusiness => activeBuisnesses.Get(entity);
         }
+        private List<BusinessData> businessDatas;
 
         public GameUISystem(GameScreenComponent gameScreenPrefab)
         {
@@ -53,7 +54,7 @@ namespace TestAsssignment.Systems
 
             _screenInstance = GameObject.Instantiate(_gameScreenPrefab);
 
-            var businessDatas = GetBusinessDatas();
+            businessDatas = GetBusinessDatas();
             _screenInstance.SetInfo(businessDatas);
 
             _sharedData = systems.GetShared<SharedData>();
@@ -61,7 +62,6 @@ namespace TestAsssignment.Systems
             _screenInstance.SetBalanceValue(_sharedData.Money);
         }
 
-        // rework
         private List<BusinessData> GetBusinessDatas()
         {
             var businessDatas = new List<BusinessData>();
@@ -72,24 +72,10 @@ namespace TestAsssignment.Systems
                 {
                     config = _buisnessesCongfigsPool.Get(entity).config,
                     entity = entity,
+                    activeBuisnesses = _activeBuisnessesPool,
                     onLvlUpPressed = OnLvlUpPressed,
                     onPurchaseUpgradePressed = OnPurchaseUpgradePressed,
                 };
-
-                if (_activeBuisnessesPool.Has(entity))
-                {
-                    var activeBusiness = _activeBuisnessesPool.Get(entity);
-
-                    data.lvlValue = activeBusiness.businessLevel;
-                    data.purchasedUpgrades = activeBusiness.purchasedUpgrades;
-                    data.profitProgress = activeBusiness.profitProgress;
-                }
-                else
-                {
-                    data.lvlValue = 0;
-                    data.purchasedUpgrades = new bool[BusinessConfig.upgradesCount];
-                    data.profitProgress = 0;
-                }
 
                 businessDatas.Add(data);
             }
@@ -104,7 +90,7 @@ namespace TestAsssignment.Systems
 
         private void OnPurchaseUpgradePressed(BusinessData data, int upgradeIndex)
         {
-            if (data.lvlValue == 0)
+            if (!data.IsActiveBusiness)
                 return;
 
             var requiredMoney = data.config.Upgrades[upgradeIndex].upgradePrice;
@@ -112,41 +98,47 @@ namespace TestAsssignment.Systems
             if (!_sharedData.HasMoney(requiredMoney))
                 return;
 
+            var entity = _world.NewEntity();
+
             var spendMoneyPool = _world.GetPool<SpendMoneyComponent>();
             var upgradePool = _world.GetPool<BuyBusinessUpgradeCommponent>();
 
-            ref var spend = ref spendMoneyPool.Add(data.entity);
+            ref var spend = ref spendMoneyPool.Add(entity);
             spend.value = requiredMoney;
 
-            ref var upgrade = ref upgradePool.Add(data.entity);
+            ref var upgrade = ref upgradePool.Add(entity);
             upgrade.entity = data.entity;
             upgrade.index = upgradeIndex;
-
-            Debug.Log("Upgrade purchased!");
         }
 
         private void OnLvlUpPressed(BusinessData data)
         {
-            var requiredMoney = GameMathUtils.GetBusinessLvlUpPrice(data.config, data.lvlValue);
+            int level = 0;
+            if (data.IsActiveBusiness)
+            {
+                level = data.GetActiveBusiness.businessLevel;
+            }
+
+            var requiredMoney = GameMathUtils.GetBusinessLvlUpPrice(data.config, level);
 
             if (!_sharedData.HasMoney(requiredMoney))
                 return;
 
+            var entity = _world.NewEntity();
+
             var spendMoneyPool = _world.GetPool<SpendMoneyComponent>();
             var lvlupPool = _world.GetPool<IncreaseBusinessLevelComponent>();
 
-            ref var spend = ref spendMoneyPool.Add(data.entity);
+            ref var spend = ref spendMoneyPool.Add(entity);
             spend.value = requiredMoney;
 
-            ref var upgrade = ref lvlupPool.Add(data.entity);
+            ref var upgrade = ref lvlupPool.Add(entity);
             upgrade.entity = data.entity;
-
-            Debug.Log("Lvl up purchased!");
         }
 
         public void PostRun(IEcsSystems systems)
         {
-            _screenInstance.UpdateScreen(_activeBuisnessesPool);
+            _screenInstance.UpdateInfo();
         }
     }
 }

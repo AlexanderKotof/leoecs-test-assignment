@@ -1,6 +1,4 @@
-using Leopotam.EcsLite;
 using System.Collections.Generic;
-using TestAsssignment.Components;
 using UnityEngine;
 using static TestAsssignment.Systems.GameUISystem;
 
@@ -26,20 +24,17 @@ namespace TestAsssignment.UI
             }
         }
 
+        public void UpdateInfo()
+        {
+            for (int i = 0; i < businessesListItems.Length; i++)
+            {
+                businessesListItems[i].UpdateInfo();
+            }
+        }
+
         public void SetBalanceValue(double value)
         {
             balanceValueText.SetText($"${value}");
-        }
-
-        public void UpdateScreen(EcsPool<ActiveBusinessComponent> _activeBuisnessesPool)
-        {
-            foreach (var item in businessesListItems)
-            {
-                if (_activeBuisnessesPool.Has(item.Data.entity))
-                {
-                    item.UpdateItem(_activeBuisnessesPool.Get(item.Data.entity).profitProgress);
-                }
-            }
         }
     }
 }

@@ -19,29 +19,57 @@ namespace TestAsssignment.UI
         public UpgradeButtonComponent upgrade1Button;
         public UpgradeButtonComponent upgrade2Button;
 
-        public BusinessData Data { get; private set; }
+        private BusinessData _data;
 
         public void SetInfo(BusinessData data)
         {
-            Data = data;
+            _data = data;
 
-            businessNameText.SetText(data.config.BusinesName);
-            lvlValueText.SetText(data.lvlValue.ToString());
+            businessNameText.SetText(_data.config.BusinesName);
+            profitPogressbar.value = 0;
 
-            profitValueText.SetText($"${GameMathUtils.CalculateBusinessProfit(data.config, data.lvlValue, data.purchasedUpgrades)}");
-            lvlUpPriceValueText.SetText($"${GameMathUtils.GetBusinessLvlUpPrice(data.config, data.lvlValue)}");
+            lvlUpButton.onClick.AddListener(() => _data.onLvlUpPressed.Invoke(_data));
 
-            profitPogressbar.value = data.profitProgress / Data.config.ProfitDelay;
+            upgrade1Button.SetInfo(_data, 0);
+            upgrade2Button.SetInfo(_data, 1);
 
-            lvlUpButton.onClick.AddListener(() => data.onLvlUpPressed.Invoke(data));
-
-            upgrade1Button.SetInfo(data, 0);
-            upgrade2Button.SetInfo(data, 1);
+            UpdateInfo();
         }
 
-        public void UpdateItem(float progress)
+        public void UpdateInfo()
         {
-            var percent = progress / Data.config.ProfitDelay;
+            if (_data.IsActiveBusiness)
+            {
+                var activeBusiness = _data.GetActiveBusiness;
+                SetInfo(activeBusiness.businessLevel.ToString(),
+                    $"${GameMathUtils.GetBusinessLvlUpPrice(_data.config, activeBusiness.businessLevel)}",
+                    $"${GameMathUtils.CalculateBusinessProfit(_data.config, activeBusiness.businessLevel, activeBusiness.purchasedUpgrades)}"
+                    );
+
+                UpdateProgress();
+
+                upgrade1Button.UpdateInfo(_data, 0);
+                upgrade2Button.UpdateInfo(_data, 1);
+            }
+            else
+            {
+                SetInfo("0",
+                    $"${GameMathUtils.GetBusinessLvlUpPrice(_data.config, 0)}",
+                    $"${_data.config.BaseProfit}"
+                    );
+            }
+        }
+
+        private void SetInfo(string level, string lvlUpPrice, string profit)
+        {
+            lvlValueText.SetText(level);
+            profitValueText.SetText(profit);
+            lvlUpPriceValueText.SetText(lvlUpPrice);
+        }
+
+        private void UpdateProgress()
+        {
+            var percent = _data.GetActiveBusiness.profitProgress / _data.config.ProfitDelay;
             profitPogressbar.value = percent;
         }
     }

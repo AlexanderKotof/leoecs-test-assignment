@@ -21,9 +21,18 @@ public class UpgradeButtonComponent : MonoBehaviour
         upgradeProfitValueText.SetText($"+{upgrade.profitMultiplier * 100}%");
         upgradePriceValueText.SetText($"${upgrade.upgradePrice}");
 
-        priceContainer.SetActive(!data.purchasedUpgrades[upgradeIndex]);
-        upgradedContainer.SetActive(data.purchasedUpgrades[upgradeIndex]);
-
         button.onClick.AddListener(() => data.onPurchaseUpgradePressed.Invoke(data, upgradeIndex));
+
+        UpdateInfo(data, upgradeIndex);
+    }
+
+    public void UpdateInfo(BusinessData data, int upgradeIndex)
+    {
+        bool upgraded = data.IsActiveBusiness && data.GetActiveBusiness.purchasedUpgrades[upgradeIndex];
+
+        priceContainer.SetActive(!upgraded);
+        upgradedContainer.SetActive(upgraded);
+
+        button.interactable = data.IsActiveBusiness && !upgraded;
     }
 }
