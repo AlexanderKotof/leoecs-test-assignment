@@ -34,9 +34,6 @@ namespace TestAsssignment.Systems
                 else
                 {
                     ref var activeBusiness = ref _activePool.Add(lvlUpEntity);
-                    activeBusiness.businessLevel = 1;
-                    activeBusiness.profitProgress = 0;
-                    activeBusiness.purchasedUpgrades = new bool[BusinessConfig.upgradesCount];
                 }
 
                 _lvlUpPool.Del(entity);
