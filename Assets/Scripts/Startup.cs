@@ -79,18 +79,22 @@ namespace TestAsssignment
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsSystemsDebugSystem())
 #endif
                 .Init();
-
-            Application.quitting += SaveData;
-        }
-
-        private void SaveData()
-        {
-            SaveGameUtils.SaveGameData(_world, _sharedData.Balance);
         }
 
         private void Update()
         {
             _systems?.Run();
+        }
+
+        private void OnApplicationQuit()
+        {
+            SaveGameUtils.SaveGameData(_world, _sharedData.Balance);
+        }
+
+        private void OnApplicationFocus(bool focus)
+        {
+            if (!focus)
+                SaveGameUtils.SaveGameData(_world, _sharedData.Balance);
         }
 
         private void OnDestroy()
@@ -99,8 +103,6 @@ namespace TestAsssignment
             _systems = null;
             _world?.Destroy();
             _world = null;
-
-            Application.quitting -= SaveData;
         }
     }
 }
